@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   {% load static %}
+   <link rel="stylesheet" href="{% static 'newstyles.css' %}">
+   <title>Add a new show</title>
+</head>
+<body>
+   <div id="container">
+      <div id="header">
+         <h1>Add a new show!</h1>
+         <a href="/shows">Go back</a>
+      </div>
+      <form action="/shows/create" method="POST">
+         {% csrf_token %}
+         <input class="entry" type="text" name="title" placeholder=" Title">
+         <input class="entry" type="text" name="network" placeholder=" Network">
+         <input class="entry" type="date" name="reldate" placeholder=" Release Date">
+         <textarea class="entry" rows="3" cols="50" name="desc" placeholder=" Description of the show"></textarea>
+         <input type="Submit" value="Add">
+      </form>
+   </div>
+</body>
+</html>
