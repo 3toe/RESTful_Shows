@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .models import Show
 
 # GET - method should return a template that displays all the shows in a table
@@ -14,8 +15,14 @@ def new(request):
 
 # POST - method should add the show to the database, then redirect to /shows/<id>
 def create(request):
-   new_show = Show.objects.create(title=request.POST['title'], network=request.POST['network'], reldate=request.POST['reldate'], desc=request.POST['desc'])
-   return redirect(f'/shows/{new_show.id}')
+   errors = Show.objects.validator(request.POST)
+   if len(errors) > 0:
+      for key, value in errors.items():
+         messages.error(request, value)
+      return redirect('/shows/new')
+   else:
+      new_show = Show.objects.create(title=request.POST['title'], network=request.POST['network'], reldate=request.POST['reldate'], desc=request.POST['desc'])
+      return redirect(f'/shows/{new_show.id}')
 
 # GET - method should return a template that displays the specific show's information
 def show_info(request, show_id):
@@ -33,13 +40,19 @@ def show_edit(request, show_id):
 
 # POST - method should update the specific show in the database, then redirect to /shows/<id>
 def show_update(request, show_id):
-   show = Show.objects.get(id=show_id)
-   show.title = request.POST['title']
-   show.network = request.POST['network']
-   show.reldate = request.POST['reldate']
-   show.desc = request.POST['desc']
-   show.save()
-   return redirect(f'/shows/{show.id}')
+   errors = Show.objects.validator(request.POST)
+   if len(errors) > 0:
+      for key, value in errors.items():
+         messages.error(request, value)
+      return redirect(f'/shows/{show_id}/edit')
+   else:
+      show = Show.objects.get(id=show_id)
+      show.title = request.POST['title']
+      show.network = request.POST['network']
+      show.reldate = request.POST['reldate']
+      show.desc = request.POST['desc']
+      show.save()
+      return redirect(f'/shows/{show.id}')
 
 # POST - method should delete the show with the specified id from the database, then redirect to /shows
 def show_delete(request, show_id):

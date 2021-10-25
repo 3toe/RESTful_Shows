@@ -14,6 +14,15 @@
          <h1>Add a new show!</h1>
          <a href="/shows">Go back</a>
       </div>
+      
+      {% if messages %}
+         <ul class="messages">    
+         {% for message in messages %}    
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+         {% endfor %}
+         </ul>
+      {% endif %}
+
       <form action="/shows/create" method="POST">
          {% csrf_token %}
          <input class="entry" type="text" name="title" placeholder=" Title">

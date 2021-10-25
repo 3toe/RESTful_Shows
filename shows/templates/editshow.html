@@ -14,6 +14,15 @@
          <h1>Edit this show!</h1>
          <a href="/shows">Go back</a>
       </div>
+
+      {% if messages %}
+         <ul class="messages">    
+         {% for message in messages %}    
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+         {% endfor %}
+         </ul>
+      {% endif %}
+      
       <form action="/shows/{{show.id}}/update" method="POST">
          {% csrf_token %}
          <label>Title:</label>
@@ -21,7 +30,7 @@
          <label>Network:</label>
          <input class="entry" type="text" name="network" value="{{show.network}}">
          <label>Release Date:</label>
-         <input class="entry" type="date" name="reldate" value="{{show.reldate}}">
+         <input class="entry" type="date" name="reldate" value="{{show.reldate|date:'Y-m-d'}}"">
          <label>Description:</label>
          <textarea class="entry" rows="3" cols="50" name="desc" value="{{show.desc}}" placeholder=" Description of the show"></textarea>
          <input type="Submit" value="Update">
